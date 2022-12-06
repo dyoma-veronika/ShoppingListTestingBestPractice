@@ -33,7 +33,6 @@ class ShoppingViewModel @ViewModelInject constructor(
 
     fun setCurrentImageUrl(url: String) {
         _currentImageUrl.postValue(url)
-        // TODO: test if we call this fun with any url if this url can be observe from this live data
     }
 
     fun deleteShoppingItem(shoppingItem: ShoppingItem) = viewModelScope.launch {
@@ -94,7 +93,7 @@ class ShoppingViewModel @ViewModelInject constructor(
         val shoppingItem =
             ShoppingItem(name, amount, priceString.toFloat(), _currentImageUrl.value ?: "")
         insertShoppingItemIntoDb(shoppingItem)
-        setCurrentImageUrl("")// TODO: test if it's really sets current image url to empty string after we successfully inserted item
+        setCurrentImageUrl("")
         _insertShoppingItemStatus.postValue(Event(Resource.success(shoppingItem)))
     }
 

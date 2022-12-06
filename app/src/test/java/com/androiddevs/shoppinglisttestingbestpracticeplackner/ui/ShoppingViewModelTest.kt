@@ -87,14 +87,13 @@ class ShoppingViewModelTest {
     fun `after inserting shopping item with valid input, current img url is empty string`() {
         viewModel.insertShoppingItem("name", "5", "3.0")
 
-        //val value = viewModel.insertShoppingItemStatus.getOrAwaitValueTest()
         val url = viewModel.currentImageUrl.getOrAwaitValueTest()
 
         assertThat(url).isEqualTo("")
     }
 
     @Test
-    fun `set img url match live data value`() {
+    fun `inputted img url matches live data value`() {
         viewModel.setCurrentImageUrl("url")
 
         val url = viewModel.currentImageUrl.getOrAwaitValueTest()
