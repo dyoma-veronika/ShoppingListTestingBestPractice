@@ -1,7 +1,8 @@
-package com.androiddevs.shoppinglisttestingbestpracticeplackner
+package com.androiddevs.shoppinglisttestingbestpracticeplackner.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.androiddevs.shoppinglisttestingbestpracticeplackner.R
 
 
 class MainActivity : AppCompatActivity() {
