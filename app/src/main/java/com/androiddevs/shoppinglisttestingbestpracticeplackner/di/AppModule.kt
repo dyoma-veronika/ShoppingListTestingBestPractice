@@ -2,6 +2,7 @@ package com.androiddevs.shoppinglisttestingbestpracticeplackner.di
 
 import android.content.Context
 import androidx.room.Room
+import com.androiddevs.shoppinglisttestingbestpracticeplackner.R
 import com.androiddevs.shoppinglisttestingbestpracticeplackner.data.local.ShoppingDao
 import com.androiddevs.shoppinglisttestingbestpracticeplackner.data.local.ShoppingItemDatabase
 import com.androiddevs.shoppinglisttestingbestpracticeplackner.data.remote.PixabayAPI
@@ -9,6 +10,8 @@ import com.androiddevs.shoppinglisttestingbestpracticeplackner.other.Constants.B
 import com.androiddevs.shoppinglisttestingbestpracticeplackner.other.Constants.DATABASE_NAME
 import com.androiddevs.shoppinglisttestingbestpracticeplackner.repositories.DefaultShoppingRepository
 import com.androiddevs.shoppinglisttestingbestpracticeplackner.repositories.ShoppingRepository
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -34,6 +37,16 @@ object AppModule {
         dao: ShoppingDao,
         api: PixabayAPI
     ) = DefaultShoppingRepository(dao, api) as ShoppingRepository
+
+    @Singleton
+    @Provides
+    fun provideGlideInstance(
+        @ApplicationContext context: Context
+    ) = Glide.with(context).setDefaultRequestOptions(
+        RequestOptions()
+            .placeholder(R.drawable.ic_image)
+            .error(R.drawable.ic_image)
+    )
 
     @Singleton
     @Provides
