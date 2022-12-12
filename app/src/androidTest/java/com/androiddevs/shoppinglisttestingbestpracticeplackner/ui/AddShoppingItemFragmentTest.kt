@@ -1,29 +1,30 @@
 package com.androiddevs.shoppinglisttestingbestpracticeplackner.ui
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.Espresso.pressBack
 import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.action.ViewActions.replaceText
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.filters.MediumTest
-import com.androiddevs.shoppinglisttestingbestpracticeplackner.MainCoroutineRuleAndroidTest
 import com.androiddevs.shoppinglisttestingbestpracticeplackner.launchFragmentInHiltContainer
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
 import com.androiddevs.shoppinglisttestingbestpracticeplackner.R
+import com.androiddevs.shoppinglisttestingbestpracticeplackner.data.local.ShoppingItem
 import com.androiddevs.shoppinglisttestingbestpracticeplackner.getOrAwaitValue
 import com.androiddevs.shoppinglisttestingbestpracticeplackner.repositories.FakeShoppingRepositoryAndroidTest
-import com.google.common.truth.Truth
+import com.google.common.truth.Truth.assertThat
+import com.androiddevs.shoppinglisttestingbestpracticeplackner.MainCoroutineRuleAndroidTest
+import javax.inject.Inject
 
 @MediumTest
 @HiltAndroidTest
@@ -39,12 +40,15 @@ class AddShoppingItemFragmentTest {
     @get:Rule
     val mainCoroutineRule = MainCoroutineRuleAndroidTest()
 
-    private lateinit var viewModel: ShoppingViewModel
+    @Inject
+    lateinit var fragmentFactory: ShoppingFragmentFactory
+
+    private lateinit var testViewModel: ShoppingViewModel
 
     @Before
     fun setup() {
         hiltRule.inject()
-        viewModel = ShoppingViewModel(FakeShoppingRepositoryAndroidTest())
+        testViewModel = ShoppingViewModel(FakeShoppingRepositoryAndroidTest())
     }
 
     @Test
@@ -57,6 +61,23 @@ class AddShoppingItemFragmentTest {
         pressBack()
 
         verify(navController).popBackStack()
+    }
+
+    @Test
+    fun clickInsertIntoDb_shoppingItemInsertedIntoDb() {
+        launchFragmentInHiltContainer<AddShoppingItemFragment>(
+            fragmentFactory = fragmentFactory
+        ) {
+            viewModel = testViewModel
+        }
+
+        onView(withId(R.id.etShoppingItemName)).perform(replaceText("shopping item"))
+        onView(withId(R.id.etShoppingItemAmount)).perform(replaceText("5"))
+        onView(withId(R.id.etShoppingItemPrice)).perform(replaceText("5.5"))
+        onView(withId(R.id.btnAddShoppingItem)).perform(click())
+
+        assertThat(testViewModel.shoppingItems.getOrAwaitValue())
+            .contains(ShoppingItem("shopping item", 5, 5.5f, ""))
     }
 
     @Test
@@ -77,9 +98,9 @@ class AddShoppingItemFragmentTest {
     fun pressBackButton_curImageUrlIsEmpty() {
         val navController = mock(NavController::class.java)
 
-        viewModel.setCurrentImageUrl("")
+        testViewModel.setCurrentImageUrl("")
 
-        val url = viewModel.currentImageUrl.getOrAwaitValue()
+        val url = testViewModel.currentImageUrl.getOrAwaitValue()
 
         launchFragmentInHiltContainer<AddShoppingItemFragment> {
             Navigation.setViewNavController(requireView(), navController)
@@ -87,6 +108,6 @@ class AddShoppingItemFragmentTest {
 
         pressBack()
 
-        Truth.assertThat(url).isEqualTo("")
+        assertThat(url).isEqualTo("")
     }
 }
