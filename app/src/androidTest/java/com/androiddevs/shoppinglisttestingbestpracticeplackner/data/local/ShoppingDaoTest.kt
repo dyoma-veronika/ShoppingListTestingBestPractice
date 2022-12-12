@@ -7,6 +7,8 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.SmallTest
 import com.androiddevs.shoppinglisttestingbestpracticeplackner.getOrAwaitValue
+import com.androiddevs.shoppinglisttestingbestpracticeplackner.launchFragmentInHiltContainer
+import com.androiddevs.shoppinglisttestingbestpracticeplackner.ui.ShoppingFragment
 import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
